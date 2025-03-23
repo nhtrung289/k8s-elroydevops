@@ -1,0 +1,13 @@
+===========Install VM
+1/ file /etc/netplan/50-cloud-init.yaml will be restore by 90-installer-network.cfg after reboot, so let's update 90-installer-network.cfg
+root@BastionHostPC:/etc/cloud/cloud.cfg.d# cat 90-installer-network.cfg
+network:
+    ethernets:
+        ens33:
+            dhcp4: no
+            addresses: [192.168.22.100/24]
+            gateway4: 192.168.22.2
+            nameservers:
+                addresses: [8.8.8.8, 8.8.4.4]
+    version: 2
+
