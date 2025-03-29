@@ -1,4 +1,3 @@
-
 ===========apt update upgrade
 sudo apt update -y && sudo apt upgrade -y
 
@@ -6,13 +5,6 @@ sudo apt update -y && sudo apt upgrade -y
 192.168.22.111 k8smaster1
 192.168.22.112 k8smaster2
 192.168.22.113 k8smaster3
-========== create user devops
-sudo adduser devops
-sudo usermod -aG sudo devops
-su devops
-sudo whoami
-cd /home/devops
-
 ==========reset k8s cluster
 sudo kubeadm reset -f
 sudo rm -rf /var/lib/etcd
@@ -56,7 +48,7 @@ sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 ====== masters
-sudo kubeadm init --control-plane-endpoint "192.168.121.111:6443" --upload-certs
+sudo kubeadm init --control-plane-endpoint "192.168.1.111:6443" --upload-certs
 
 mkdir -p $HOME/.kube 
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -64,9 +56,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.5/manifests/calico.yaml
 =========================master 2 and master 3
-sudo kubeadm join 192.168.121.111:6443 --token g8u4z8.75fxn2z9x9bzxnhi \
-        --discovery-token-ca-cert-hash sha256:19beb57246f6af5a79cb1572139e981bb3c1c279e696d86bbfde7164d2f237ca \
-        --control-plane --certificate-key 1e615a59aee119665f79f369f276d5331c2b61bcc99040e0844f9d00401d4ebf
+sudo  kubeadm join 192.168.1.111:6443 --token 1snmfy.2kyutlspo51vpovz \
+        --discovery-token-ca-cert-hash sha256:1d60d035c677fe8fd00cee6059b16c53f6b9e7aa0fe3479e806b1fcca3186ae2 \
+        --control-plane --certificate-key 6c974832aa8602859fd983d87f6c656a3d10118f2db608ae9b769f7fd0e6abe3
 
 =========rancher run with SUDO
 mkfs.ext4 -m 0 /dev/sdb
@@ -87,7 +79,7 @@ vi docker-compose.yml
 version: '3'
 services:
   rancher-server:
-    image: rancher/rancher:v2.9.5
+    image: rancher/rancher:v2.10.2
     container_name: rancher-server
     restart: unless-stopped
     ports:
@@ -101,4 +93,4 @@ docker-compose up -d
 docker ps -a
 docker logs rancher-server 2>&1 | grep "Bootstrap Password:"
 
-admin/53h3CVGjB3R182zs
+admin/sijtMAKnpSEt7qaV
